@@ -1,5 +1,6 @@
 # Some simple array shortcuts
-This library is mostly intended for my projects' internal use, you've been warned :)
+
+Small collection of (sometimes) useful array-related tools.
 
 ## Ar::get()
 
