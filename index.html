@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="./img/favicon.ico">
+
+	<title>eznio\ar library</title>
+
+        <link href="./css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="./css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="./css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="./css/highlight.css">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body class="homepage">
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+
+            <!-- Main title -->
+            <a class="navbar-brand" href=".">eznio\ar library</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#some-simple-array-shortcuts">Some simple array shortcuts</a></li>
+        
+            <li><a href="#arget">Ar::get()</a></li>
+        
+            <li><a href="#areach">Ar::each()</a></li>
+        
+            <li><a href="#arfilter">Ar::filter()</a></li>
+        
+            <li><a href="#arreject">Ar::reject()</a></li>
+        
+            <li><a href="#armap">Ar::map()</a></li>
+        
+            <li><a href="#arreduce">Ar::reduce()</a></li>
+        
+    
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="some-simple-array-shortcuts">Some simple array shortcuts</h1>
+<p>Small collection of (sometimes) useful array-related tools.</p>
+<h2 id="arget">Ar::get()</h2>
+<pre><code class="php">function get(array $array, string $path);
+</code></pre>
+
+<p>This is used for error-free getting deep nested array value:</p>
+<pre><code class="php">$array = ['a' =&gt; ['b' =&gt; ['c' =&gt; 'value']]]
+
+$result = Ar::get($array, 'a.b.c'); // 'value'
+
+$result = Ar::get($array, 'a.b'); // ['c' =&gt; 'value']
+
+$result = Ar::get($array, 'non.existent.path'); // null
+</code></pre>
+
+<h2 id="areach">Ar::each()</h2>
+<pre><code class="php">function each(array $array, callable $callback)
+</code></pre>
+
+<pre><code class="php">$callback = function(mixed $item) : void {}
+</code></pre>
+
+<p>Runs given function on every array element. Does not store any returned values.</p>
+<pre><code class="php">$usersToDelete = $usersModel-&gt;getUsersToDelete();
+Ar::each($usersToDelete, function($user) {
+    $user-&gt;delete();
+});
+</code></pre>
+
+<h2 id="arfilter">Ar::filter()</h2>
+<pre><code class="php">function filter(array $array, callable $callback)
+</code></pre>
+
+<pre><code class="php">$callback = function(mixed $item) : bool {}
+</code></pre>
+
+<p>Filters array using provided function to decide if element should be stored (true) or dropped (false).</p>
+<pre><code class="php">$usersToSendEmail = $usersModel-&gt;getUsersToSendEmail();
+$usersWithEmails = Ar::filter($usersToSendEmail, function($user) {
+    return !empty($user-&gt;getEmail());
+});
+</code></pre>
+
+<h2 id="arreject">Ar::reject()</h2>
+<pre><code class="php">function reject(array $array, callable $callback)
+</code></pre>
+
+<pre><code class="php">$callback = function(mixed $item) : bool {}
+</code></pre>
+
+<p>Opposing to Ar::filter(), this drops element by with returned true and stores with returned false.</p>
+<pre><code class="php">$usersToSendEmail = $usersModel-&gt;getUsersToSendEmail();
+$usersWithEmails = Ar::reject($usersToSendEmail, function($user) {
+    return empty($user-&gt;getEmail());
+});
+</code></pre>
+
+<h2 id="armap">Ar::map()</h2>
+<pre><code class="php">function map(array $array, callable $callback)
+</code></pre>
+
+<pre><code class="php">$callback = function(mixed $item) : mixed {}
+</code></pre>
+
+<p>Maps one array to another using provided function on per-element basis.</p>
+<pre><code class="php">$usersToSendEmail = $usersModel-&gt;getUsersToSendEmail();
+$emails = Ar::map($usersToSendEmail, function($user) {
+    return $user-&gt;getEmail();
+});
+// $emails now holds list of emails
+</code></pre>
+
+<h2 id="arreduce">Ar::reduce()</h2>
+<pre><code class="php">function reduce(array $array, callable $callback, mixed $initialValue)
+</code></pre>
+
+<pre><code class="php">$callback = function(mixed $item, mixed $currentValue) : mixed {}
+</code></pre>
+
+<p>Reduces array to scalar value of any type.</p>
+<p>Third parameter is initial scalar value, null by default.</p>
+<pre><code class="php">$usersToCountAverageAge = $usersModel-&gt;getAllUsers();
+$totalAge = Ar::reduce($usersToCountAverageAge, function($user, $currentAge) {
+    return $currentAge + $user-&gt;getAge();
+}, 0);
+$averageAge = $totalAge / count($usersToCountAverageAge);
+</code></pre></div>
+            
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        <script src="./js/jquery-1.10.2.min.js"></script>
+        <script src="./js/bootstrap-3.0.3.min.js"></script>
+        <script src="./js/highlight.pack.js"></script>
+        <script>var base_url = '.';</script>
+        <script data-main="./mkdocs/js/search.js" src="./mkdocs/js/require.js"></script>
+        <script src="./js/base.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            From here you can search these documents. Enter
+                            your search terms below.
+                        </p>
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                            </div>
+                        </form>
+                        <div id="mkdocs-search-results"></div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 0.15.3
+Build Date UTC : 2016-07-15 12:51:05.642306
+-->

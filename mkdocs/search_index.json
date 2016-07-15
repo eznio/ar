@@ -1,0 +1,44 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Some simple array shortcuts\n\n\nSmall collection of (sometimes) useful array-related tools.\n\n\nAr::get()\n\n\nfunction get(array $array, string $path);\n\n\n\n\nThis is used for error-free getting deep nested array value:\n\n\n$array = ['a' =\n ['b' =\n ['c' =\n 'value']]]\n\n$result = Ar::get($array, 'a.b.c'); // 'value'\n\n$result = Ar::get($array, 'a.b'); // ['c' =\n 'value']\n\n$result = Ar::get($array, 'non.existent.path'); // null\n\n\n\n\nAr::each()\n\n\nfunction each(array $array, callable $callback)\n\n\n\n\n$callback = function(mixed $item) : void {}\n\n\n\n\nRuns given function on every array element. Does not store any returned values.\n\n\n$usersToDelete = $usersModel-\ngetUsersToDelete();\nAr::each($usersToDelete, function($user) {\n    $user-\ndelete();\n});\n\n\n\n\nAr::filter()\n\n\nfunction filter(array $array, callable $callback)\n\n\n\n\n$callback = function(mixed $item) : bool {}\n\n\n\n\nFilters array using provided function to decide if element should be stored (true) or dropped (false).\n\n\n$usersToSendEmail = $usersModel-\ngetUsersToSendEmail();\n$usersWithEmails = Ar::filter($usersToSendEmail, function($user) {\n    return !empty($user-\ngetEmail());\n});\n\n\n\n\nAr::reject()\n\n\nfunction reject(array $array, callable $callback)\n\n\n\n\n$callback = function(mixed $item) : bool {}\n\n\n\n\nOpposing to Ar::filter(), this drops element by with returned true and stores with returned false.\n\n\n$usersToSendEmail = $usersModel-\ngetUsersToSendEmail();\n$usersWithEmails = Ar::reject($usersToSendEmail, function($user) {\n    return empty($user-\ngetEmail());\n});\n\n\n\n\nAr::map()\n\n\nfunction map(array $array, callable $callback)\n\n\n\n\n$callback = function(mixed $item) : mixed {}\n\n\n\n\nMaps one array to another using provided function on per-element basis.\n\n\n$usersToSendEmail = $usersModel-\ngetUsersToSendEmail();\n$emails = Ar::map($usersToSendEmail, function($user) {\n    return $user-\ngetEmail();\n});\n// $emails now holds list of emails\n\n\n\n\nAr::reduce()\n\n\nfunction reduce(array $array, callable $callback, mixed $initialValue)\n\n\n\n\n$callback = function(mixed $item, mixed $currentValue) : mixed {}\n\n\n\n\nReduces array to scalar value of any type.\n\n\nThird parameter is initial scalar value, null by default.\n\n\n$usersToCountAverageAge = $usersModel-\ngetAllUsers();\n$totalAge = Ar::reduce($usersToCountAverageAge, function($user, $currentAge) {\n    return $currentAge + $user-\ngetAge();\n}, 0);\n$averageAge = $totalAge / count($usersToCountAverageAge);", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#some-simple-array-shortcuts", 
+            "text": "Small collection of (sometimes) useful array-related tools.", 
+            "title": "Some simple array shortcuts"
+        }, 
+        {
+            "location": "/#arget", 
+            "text": "function get(array $array, string $path);  This is used for error-free getting deep nested array value:  $array = ['a' =  ['b' =  ['c' =  'value']]]\n\n$result = Ar::get($array, 'a.b.c'); // 'value'\n\n$result = Ar::get($array, 'a.b'); // ['c' =  'value']\n\n$result = Ar::get($array, 'non.existent.path'); // null", 
+            "title": "Ar::get()"
+        }, 
+        {
+            "location": "/#areach", 
+            "text": "function each(array $array, callable $callback)  $callback = function(mixed $item) : void {}  Runs given function on every array element. Does not store any returned values.  $usersToDelete = $usersModel- getUsersToDelete();\nAr::each($usersToDelete, function($user) {\n    $user- delete();\n});", 
+            "title": "Ar::each()"
+        }, 
+        {
+            "location": "/#arfilter", 
+            "text": "function filter(array $array, callable $callback)  $callback = function(mixed $item) : bool {}  Filters array using provided function to decide if element should be stored (true) or dropped (false).  $usersToSendEmail = $usersModel- getUsersToSendEmail();\n$usersWithEmails = Ar::filter($usersToSendEmail, function($user) {\n    return !empty($user- getEmail());\n});", 
+            "title": "Ar::filter()"
+        }, 
+        {
+            "location": "/#arreject", 
+            "text": "function reject(array $array, callable $callback)  $callback = function(mixed $item) : bool {}  Opposing to Ar::filter(), this drops element by with returned true and stores with returned false.  $usersToSendEmail = $usersModel- getUsersToSendEmail();\n$usersWithEmails = Ar::reject($usersToSendEmail, function($user) {\n    return empty($user- getEmail());\n});", 
+            "title": "Ar::reject()"
+        }, 
+        {
+            "location": "/#armap", 
+            "text": "function map(array $array, callable $callback)  $callback = function(mixed $item) : mixed {}  Maps one array to another using provided function on per-element basis.  $usersToSendEmail = $usersModel- getUsersToSendEmail();\n$emails = Ar::map($usersToSendEmail, function($user) {\n    return $user- getEmail();\n});\n// $emails now holds list of emails", 
+            "title": "Ar::map()"
+        }, 
+        {
+            "location": "/#arreduce", 
+            "text": "function reduce(array $array, callable $callback, mixed $initialValue)  $callback = function(mixed $item, mixed $currentValue) : mixed {}  Reduces array to scalar value of any type.  Third parameter is initial scalar value, null by default.  $usersToCountAverageAge = $usersModel- getAllUsers();\n$totalAge = Ar::reduce($usersToCountAverageAge, function($user, $currentAge) {\n    return $currentAge + $user- getAge();\n}, 0);\n$averageAge = $totalAge / count($usersToCountAverageAge);", 
+            "title": "Ar::reduce()"
+        }
+    ]
+}
