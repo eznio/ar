@@ -26,7 +26,7 @@ class Ar
     /**
      * Calls provided function on every array's element
      * @param array $array
-     * @param function($item) $callback
+     * @param callable $callback
      */
     public static function each($array, $callback)
     {
@@ -38,7 +38,7 @@ class Ar
     /**
      * Filters array into new one using function to decide which elements to keep
      * @param array $array
-     * @param function($item) $callback
+     * @param callable $callback
      * @return array
      */
     public static function filter($array, $callback)
@@ -55,7 +55,7 @@ class Ar
     /**
      * Filters array into new one using function to decide which elements to drop
      * @param array $array
-     * @param function($item) $callback
+     * @param callable $callback
      * @return array
      */
     public static function reject($array, $callback)
@@ -67,13 +67,12 @@ class Ar
             }
         }
         return $result;
-
     }
 
     /**
      * Processes every array element with provided function and stores it's result in a new array
-     * @param $array
-     * @param $callback
+     * @param array $array
+     * @param callable $callback
      * @return array
      */
     public static function map($array, $callback)
@@ -88,7 +87,7 @@ class Ar
     /**
      * Reduces array into scalar value using provided function
      * @param array $array
-     * @param function($item, $currentValue) $callback
+     * @param callable $callback function($item, $currentValue)
      * @param mixed $initialValue
      * @return mixed
      */
