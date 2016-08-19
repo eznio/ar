@@ -44,9 +44,9 @@ class Ar
     public static function filter($array, $callback)
     {
         $result = [];
-        foreach ($array as $item) {
+        foreach ($array as $key => $item) {
             if ($callback($item)) {
-                $result[] = $item;
+                $result[$key] = $item;
             }
         }
         return $result;
@@ -61,9 +61,9 @@ class Ar
     public static function reject($array, $callback)
     {
         $result = [];
-        foreach ($array as $item) {
+        foreach ($array as $key => $item) {
             if (!$callback($item)) {
-                $result[] = $item;
+                $result[$key] = $item;
             }
         }
         return $result;
@@ -78,8 +78,8 @@ class Ar
     public static function map($array, $callback)
     {
         $result = [];
-        foreach ($array as $item) {
-            $result[] = $callback($item);
+        foreach ($array as $key => $item) {
+            $result[$key] = $callback($item);
         }
         return $result;
     }
