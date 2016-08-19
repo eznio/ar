@@ -30,8 +30,8 @@ class Ar
      */
     public static function each($array, $callback)
     {
-        foreach ($array as $item) {
-            $callback($item);
+        foreach ($array as $key => $item) {
+            $callback($item, $key);
         }
     }
 
