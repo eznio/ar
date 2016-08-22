@@ -80,4 +80,39 @@ class ArTest extends \PHPUnit_Framework_TestCase
             ]
         ];
     }
+
+    /**
+     * @test
+     * @dataProvider arrayMapDataProvider
+     * @param array $arrayToMap
+     * @param callable $mapperCallback
+     * @param mixed $sampler
+     */
+    public function shouldReturnRightArrayMapValues($arrayToMap, $mapperCallback, $sampler)
+    {
+        $result = Ar::map($arrayToMap, $mapperCallback);
+
+        $this->assertEquals($sampler, $result);
+    }
+
+    public static function arrayMapDataProvider()
+    {
+        return [
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function ($item) {
+                    return $item * 2;
+                },
+                ['a' => 2, 'b' => 4, 'c' => 6],
+            ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function ($item, $itemId) {
+                    return ['x' . $itemId => $item * 2];
+                },
+                ['xa' => 2, 'xb' => 4, 'xc' => 6],
+            ]
+
+        ];
+    }
 }

@@ -79,7 +79,12 @@ class Ar
     {
         $result = [];
         foreach ($array as $key => $item) {
-            $result[$key] = $callback($item);
+            $response = $callback($item, $key);
+            if (is_array($response)) {
+                $result[current(array_keys($response))] = current(array_values($response));
+            } else {
+                $result[$key] = $response;
+            }
         }
         return $result;
     }
