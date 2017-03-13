@@ -24,7 +24,7 @@ class Ar
     }
 
     /**
-     * Calls provided function on every array's element
+     * Calls provided function on every array's element without altering them
      * @param array $array
      * @param callable $callback
      */
@@ -103,5 +103,52 @@ class Ar
             $currentValue = $callback($item, $currentValue);
         }
         return $currentValue;
+    }
+
+    /**
+     * Sorts array comparing elements given in Ar::get() notattion (level1.level2.level3.etc)
+     * @param $array
+     * @param $element
+     * @return array
+     */
+    public static function sort($array, $element) {
+        usort($array, function($item1, $item2) use ($element) {
+            if (Ar::get($item1, $element) > Ar::get($item2, $element)) {
+                return 1;
+            } elseif (Ar::get($item1, $element) == Ar::get($item2, $element)) {
+                return 0;
+            } else {
+                return -1;
+            }
+        });
+        return $array;
+    }
+
+    /**
+     * Checks if
+     *  a. array is given
+     *  b. it doesn't contain any other arrays as elements
+     * @param $array
+     * @return bool
+     */
+    public static function is1d($array) {
+        return is_array($array) ? Ar::reduce($array, function($element, $initial) {
+            return $initial && !is_array($element);
+        }, true) : false;
+
+    }
+
+    /**
+     * Checks if
+     *  a. array is given
+     *  b. it contains only arrays as elements
+     *  c. those arrays doesn't contain child arrays
+     * @param $array
+     * @return bool
+     */
+    public static function is2d($array) {
+        return is_array($array) ? Ar::reduce($array, function($element, $initial) {
+            return $initial && Ar::is1d($element);
+        }, true) : false;
     }
 }
