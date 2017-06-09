@@ -13,7 +13,7 @@ class Ar
      * @param mixed $defaultValue
      * @return mixed
      */
-    public static function get(array $array, string $path, mixed $defaultValue = null) : mixed
+    public static function get(array $array, string $path, $defaultValue = null) : mixed
     {
         $path = explode('.', $path);
         foreach ($path as $item) {
@@ -43,7 +43,7 @@ class Ar
      * @param mixed $value
      * @return array
      */
-    public static function set(array $array, string $path, mixed $value) : array
+    public static function set(array $array, string $path, $value) : array
     {
         if (empty($path)) {
             return $array = $value;
@@ -168,7 +168,7 @@ class Ar
      * @param mixed $initialValue
      * @return mixed
      */
-    public static function reduce(array $array, callable $callback, mixed $initialValue = null) : mixed
+    public static function reduce(array $array, callable $callback, $initialValue = null) : mixed
     {
         $currentValue = $initialValue;
         foreach ($array as $item) {
