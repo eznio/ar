@@ -7,19 +7,91 @@ class Ar
     /**
      * Error-safe recursive array item getter
      * Translates path "a.b.c" to 'a' => ['b' => ['c' => ... ]]]
+     * Returns $defaultValue (null if not set) if nothing found
      * @param array $array
      * @param string $path
+     * @param mixed $defaultValue
      * @return mixed
      */
-    public static function get($array, $path)
+    public static function get(array $array, string $path, mixed $defaultValue = null) : mixed
     {
         $path = explode('.', $path);
         foreach ($path as $item) {
             if (!is_array($array) || !array_key_exists($item, $array)) {
-                return null;
+                return $defaultValue;
             }
             $array = $array[$item];
         }
+        return $array;
+    }
+
+    /**
+     * Shortcut to check if given "path" exists inside the array
+     * @param array $array
+     * @param string $path
+     * @return bool
+     */
+    public static function has(array $array, string $path) : boolean
+    {
+        return Ar::get($array, $path) !== null;
+    }
+
+    /**
+     * Sets value deep inside the array
+     * @param array $array
+     * @param string $path
+     * @param mixed $value
+     * @return array
+     */
+    public static function set(array $array, string $path, mixed $value) : array
+    {
+        if (empty($path)) {
+            return $array = $value;
+        }
+
+        $keys = explode('.', $path);
+        $current =& $array;
+
+        while (count($keys) > 1)
+        {
+            $path = array_shift($keys);
+            if (!isset($current[$path]) || !is_array($current[$path]))
+            {
+                $current[$path] = [];
+            }
+            $current =& $current[$path];
+        }
+        $current[array_shift($keys)] = $value;
+
+        return $array;
+    }
+
+    /**
+     * Unsets given array "path"
+     * @param $array
+     * @param $path
+     * @return array
+     */
+    public static function unset(array $array, string $path) : array
+    {
+        if (is_null($path)) {
+            return [];
+        }
+
+        $keys = explode('.', $path);
+        $current =& $array;
+
+        while (count($keys) > 1)
+        {
+            $path = array_shift($keys);
+            if (!isset($current[$path]) || !is_array($current[$path]))
+            {
+                $current[$path] = [];
+            }
+            $current =& $current[$path];
+        }
+        unset($current[array_shift($keys)]);
+
         return $array;
     }
 
@@ -28,7 +100,7 @@ class Ar
      * @param array $array
      * @param callable $callback
      */
-    public static function each($array, $callback)
+    public static function each(array $array, callable $callback) : void
     {
         foreach ($array as $key => $item) {
             $callback($item, $key);
@@ -41,7 +113,7 @@ class Ar
      * @param callable $callback
      * @return array
      */
-    public static function filter($array, $callback)
+    public static function filter(array $array, callable $callback) : array
     {
         $result = [];
         foreach ($array as $key => $item) {
@@ -58,7 +130,7 @@ class Ar
      * @param callable $callback
      * @return array
      */
-    public static function reject($array, $callback)
+    public static function reject(array $array, callable $callback) : array
     {
         $result = [];
         foreach ($array as $key => $item) {
@@ -75,7 +147,7 @@ class Ar
      * @param callable $callback
      * @return array
      */
-    public static function map($array, $callback)
+    public static function map(array $array, callable $callback) : array
     {
         $result = [];
         foreach ($array as $key => $item) {
@@ -96,7 +168,7 @@ class Ar
      * @param mixed $initialValue
      * @return mixed
      */
-    public static function reduce($array, $callback, $initialValue = null)
+    public static function reduce(array $array, callable $callback, mixed $initialValue = null) : mixed
     {
         $currentValue = $initialValue;
         foreach ($array as $item) {
@@ -106,12 +178,13 @@ class Ar
     }
 
     /**
-     * Sorts array comparing elements given in Ar::get() notattion (level1.level2.level3.etc)
+     * Sorts array comparing elements given in Ar::get() notation (level1.level2.level3.etc)
      * @param $array
      * @param $element
      * @return array
      */
-    public static function sort($array, $element) {
+    public static function sort(array $array, string $element) : array
+    {
         usort($array, function($item1, $item2) use ($element) {
             if (Ar::get($item1, $element) > Ar::get($item2, $element)) {
                 return 1;
@@ -131,7 +204,8 @@ class Ar
      * @param $array
      * @return bool
      */
-    public static function is1d($array) {
+    public static function is1d(array $array) : boolean
+    {
         return is_array($array) ? Ar::reduce($array, function($element, $initial) {
             return $initial && !is_array($element);
         }, true) : false;
@@ -142,11 +216,12 @@ class Ar
      * Checks if
      *  a. array is given
      *  b. it contains only arrays as elements
-     *  c. those arrays doesn't contain child arrays
+     *  c. those arrays don't contain child arrays
      * @param $array
      * @return bool
      */
-    public static function is2d($array) {
+    public static function is2d(array $array) : boolean
+    {
         return is_array($array) ? Ar::reduce($array, function($element, $initial) {
             return $initial && Ar::is1d($element);
         }, true) : false;

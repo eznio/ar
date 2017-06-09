@@ -6,10 +6,10 @@
   "homepage": "https://github.com/eznio/ar",
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=7.0.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~5.0"
+    "phpunit/phpunit": "~7.0"
   },
   "autoload": {
     "psr-4": {
