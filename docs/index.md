@@ -20,6 +20,22 @@ $result = Ar::get($array, 'a.b'); // ['c' => 'value']
 $result = Ar::get($array, 'non.existent.path'); // null
 ```
 
+## Ar::set()
+
+```php
+function set(array $array, string $path, mixed $value);
+```
+
+Sets the given value deep inside the array, using the "dotted-path" notation
+
+```php
+$array = ['a' => ['b' => ['c' => 'value']]]
+
+$array = Ar::set($array, 'a.b.c', 'ddd'); 
+
+$result = Ar::get($array, 'a.b.c'); // 'ddd'
+```
+
 ## Ar::each()
 
 ```php
